@@ -15,15 +15,24 @@ const protect = async (req, res, next) => {
     }
 
     if (!token) {
+      console.log("AUTH DEBUG: No token found in request");
+      console.log("AUTH DEBUG: Headers:", JSON.stringify(req.headers));
       return res.status(401).json({
         success: false,
         message: 'Not authorized, no token provided',
       });
     }
 
+    console.log("TOKEN RECEIVED:", token);
+    console.log("JWT SECRET EXISTS:", !!process.env.JWT_SECRET);
+
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("DECODED TOKEN:", decoded);
+      
       req.user = await User.findById(decoded.id).select('-password');
+      console.log("USER FOUND:", req.user?._id);
+      
       if (!req.user) {
         return res.status(401).json({
           success: false,
@@ -32,6 +41,7 @@ const protect = async (req, res, next) => {
       }
       next();
     } catch (error) {
+      console.log("JWT ERROR:", error.message);
       return res.status(401).json({
         success: false,
         message: 'Not authorized, token invalid',
