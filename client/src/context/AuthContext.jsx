@@ -21,12 +21,22 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    checkAuth();
+    // If there's a token in localStorage, verify it with the server
+    const token = localStorage.getItem('token');
+    if (token) {
+      checkAuth();
+    } else {
+      setLoading(false);
+    }
   }, [checkAuth]);
 
   const login = async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
     if (data.success) {
+      // Store the token returned from the server
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
       setUser(data.user);
     }
     return data;
@@ -35,6 +45,10 @@ export function AuthProvider({ children }) {
   const register = async (name, email, password) => {
     const { data } = await api.post('/auth/register', { name, email, password });
     if (data.success) {
+      // Store the token returned from the server
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+      }
       setUser(data.user);
     }
     return data;
@@ -46,6 +60,7 @@ export function AuthProvider({ children }) {
     } catch {
       // Proceed with local logout even if API call fails
     }
+    localStorage.removeItem('token');
     setUser(null);
   };
 
