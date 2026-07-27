@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const User = require('../models/User');
 const Lead = require('../models/Lead');
 
-dotenv.config({ path: require('path').join(__dirname, '..', '.env') });
+dotenv.config();
 
 const seedData = async () => {
   try {

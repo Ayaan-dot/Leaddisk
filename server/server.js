@@ -8,7 +8,7 @@ const rateLimit = require('express-rate-limit');
 const dotenv = require('dotenv');
 const path = require('path');
 
-dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
 const leadRoutes = require('./routes/leadRoutes');
@@ -21,14 +21,26 @@ app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet());
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://leaddisk-ten.vercel.app",
+];
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error(`CORS blocked for origin: ${origin}`));
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"],
   })
 );
+
+console.log("Allowed Origins:", allowedOrigins);
 
 // Rate limiting
 const limiter = rateLimit({

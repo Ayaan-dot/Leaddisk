@@ -1,27 +1,18 @@
-# Production Deployment Plan - Implementation Steps
+# CORS / Deployment Fix Progress
 
-## Status: ✅ COMPLETE
+## Steps
 
-### Phase 1: Foundation Files
-- [x] Step 1: Create `.gitignore`
-- [x] Step 2: Create `server/.env.example`
-- [x] Step 3: Create `client/.env.example`
+- [x] Step 1: Read all server files and confirm no duplicate CORS config
+- [x] Step 2: Plan approved by user
 
-### Phase 2: Backend Production Hardening
-- [x] Step 4: Update `server/server.js` - Remove localhost fallbacks, add trust proxy, MongoDB required check
-- [x] Step 5: Update `server/utils/seed.js` - Remove localhost MongoDB fallback, add env check
+### File edits
 
-### Phase 3: Frontend Production Hardening
-- [x] Step 6: Update `client/vite.config.js` - Add env-based API URL in proxy
-- [x] Step 7: Update `client/src/services/api.js` - Use `import.meta.env.VITE_API_URL`
-- [x] Step 8: Update `server/package.json` - Add engines, node >=18.0.0
+- [x] Step 3: Edit `server/server.js` — fix `dotenv.config()`
+- [x] Step 4: Edit `server/server.js` — replace CORS with hardcoded allowedOrigins
+- [x] Step 5: Edit `server/server.js` — add startup log for allowedOrigins
+- [x] Step 6: Edit `server/utils/seed.js` — fix `dotenv.config()`
 
-### Phase 4: Cleanup & Documentation
-- [x] Step 9: Delete unnecessary files (`fix_dashboard.py`, `fix_footer.py`)
-- [x] Step 10: Create `README.md` with full documentation
-- [x] Step 11: Create `vercel.json` for Vercel SPA deployment
+### Verification
 
-### Phase 5: Deployment Configs
-- [x] All production-ready changes verified
-- [x] Ready for GitHub, Render, Vercel, MongoDB Atlas
+- [x] Step 7: Confirmed only 2 files modified, no auth/route/logic changes
 
